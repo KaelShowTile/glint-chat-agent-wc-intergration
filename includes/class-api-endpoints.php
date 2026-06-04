@@ -88,7 +88,7 @@ class Glint_AI_WC_API_Endpoints {
             $add_to_cart_text = $product->add_to_cart_text();
 
             // Construct HTML Card
-            $card_html = '<div class="glint-ai-product-card" style="background: #efefef;">';
+            $card_html = '<div class="glint-ai-product-card" style="background: #efefef; border: 1px solid #232f3d;">';
             $card_html .= '<a href="' . $product_url . '"><div class="product-image">' . $image_html . '</div></a>';
             $card_html .= '<a href="' . $product_url . '"><h3 class="product-title" style="font-size: 0.8rem;margin: 10px 15px;">' . esc_html( $product->get_name() ) . '</h3></a>';
             
