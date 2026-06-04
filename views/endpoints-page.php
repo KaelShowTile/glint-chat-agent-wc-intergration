@@ -1,8 +1,7 @@
 <div class="wrap">
     <h1><?php esc_html_e('API Endpoints', 'glint-ai-wc'); ?></h1>
 
-    <p><?php esc_html_e('These are the available REST API endpoints for the ST Chat Agent. Ensure the IP of the agent is whitelisted in the Settings page.', 'glint-ai-wc'); ?>
-    </p>
+    <p><?php esc_html_e('These are the available REST API endpoints for the ST Chat Agent.', 'glint-ai-wc'); ?></p>
 
     <table class="widefat striped">
         <thead>

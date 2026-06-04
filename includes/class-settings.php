@@ -55,23 +55,6 @@ class Glint_AI_WC_Settings
      */
     public function register_settings()
     {
-        // Security Settings Section
-        add_settings_section(
-            'glint_ai_wc_security_section',
-            __('Security Settings', 'glint-ai-wc'),
-            array($this, 'security_section_cb'),
-            'glint-ai-agent-settings'
-        );
-
-        register_setting('glint_ai_wc_settings_group', 'glint_ai_wc_ip_whitelist');
-        add_settings_field(
-            'glint_ai_wc_ip_whitelist',
-            __('IP Whitelist', 'glint-ai-wc'),
-            array($this, 'ip_whitelist_cb'),
-            'glint-ai-agent-settings',
-            'glint_ai_wc_security_section'
-        );
-
         // Coupon Settings Section
         add_settings_section(
             'glint_ai_wc_coupon_section',
@@ -116,18 +99,6 @@ class Glint_AI_WC_Settings
             'glint-ai-agent-settings',
             'glint_ai_wc_coupon_section'
         );
-    }
-
-    public function security_section_cb()
-    {
-        echo '<p>' . esc_html__('Configure access control for the AI Agent REST API.', 'glint-ai-wc') . '</p>';
-    }
-
-    public function ip_whitelist_cb()
-    {
-        $whitelist = get_option('glint_ai_wc_ip_whitelist', '');
-        echo '<textarea name="glint_ai_wc_ip_whitelist" rows="4" cols="50" class="large-text">' . esc_textarea($whitelist) . '</textarea>';
-        echo '<p class="description">' . esc_html__('Enter a comma-separated list of IPv4 or IPv6 addresses allowed to access the API endpoints.', 'glint-ai-wc') . '</p>';
     }
 
     public function coupon_section_cb()

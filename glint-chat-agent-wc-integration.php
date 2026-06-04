@@ -50,45 +50,6 @@ class Glint_AI_WC_Integration
         new Glint_AI_WC_API_Endpoints();
         new Glint_AI_WC_LLMS_Txt();
     }
-
-    /**
-     * Helper method to get the client IP, checking for proxy headers.
-     */
-    public static function get_client_ip()
-    {
-        $ip = '';
-        if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
-            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-        } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            // Can be a comma-separated list, first one is the original IP
-            $ip_list = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $ip = trim($ip_list[0]);
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
-    }
-
-    /**
-     * Permission callback to check if IP is in the whitelist.
-     */
-    public static function check_ip_whitelist()
-    {
-        $whitelist_string = get_option('glint_ai_wc_ip_whitelist', '');
-        if (empty($whitelist_string)) {
-            return new WP_Error('rest_forbidden', __('API is disabled. No IPs in whitelist.', 'glint-ai-wc'), array('status' => 403));
-        }
-
-        $allowed_ips = array_map('trim', explode(',', $whitelist_string));
-        $client_ip = self::get_client_ip();
-        error_log('Client IP is: ' . $client_ip);
-
-        if (in_array($client_ip, $allowed_ips, true)) {
-            return true;
-        }
-
-        return new WP_Error('rest_forbidden', __('Your IP is not authorized to access this API.', 'glint-ai-wc'), array('status' => 403));
-    }
 }
 
 // Initialize the plugin

@@ -18,11 +18,16 @@ class Glint_AI_WC_API_Endpoints {
         register_rest_route( 'glint-ai/v1', '/products', array(
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => array( $this, 'get_products' ),
-            'permission_callback' => array( 'Glint_AI_WC_Integration', 'check_ip_whitelist' ),
+            'permission_callback' => '__return_true',
             'args'                => array(
                 'product_ids' => array(
                     'required'          => true,
-                    'sanitize_callback' => 'sanitize_text_field',
+                    'sanitize_callback' => function( $param ) {
+                        if ( is_string( $param ) ) {
+                            $param = str_replace( array( '[', ']', '"', "'" ), '', $param );
+                        }
+                        return wp_parse_id_list( $param );
+                    },
                 ),
             ),
         ) );
@@ -31,14 +36,14 @@ class Glint_AI_WC_API_Endpoints {
         register_rest_route( 'glint-ai/v1', '/coupon', array(
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => array( $this, 'generate_coupon' ),
-            'permission_callback' => array( 'Glint_AI_WC_Integration', 'check_ip_whitelist' ),
+            'permission_callback' => '__return_true',
         ) );
 
         // Order Status Endpoint
         register_rest_route( 'glint-ai/v1', '/order-status', array(
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => array( $this, 'get_order_status' ),
-            'permission_callback' => array( 'Glint_AI_WC_Integration', 'check_ip_whitelist' ),
+            'permission_callback' => '__return_true',
             'args'                => array(
                 'order_id' => array(
                     'required'          => true,
@@ -52,14 +57,7 @@ class Glint_AI_WC_API_Endpoints {
      * Get HTML cards for products.
      */
     public function get_products( WP_REST_Request $request ) {
-        $product_ids_param = $request->get_param( 'product_ids' );
-        
-        $product_ids = array();
-        if ( is_array( $product_ids_param ) ) {
-            $product_ids = array_map( 'intval', $product_ids_param );
-        } elseif ( is_string( $product_ids_param ) ) {
-            $product_ids = array_map( 'intval', explode( ',', $product_ids_param ) );
-        }
+        $product_ids = array_filter( $request->get_param( 'product_ids' ) );
 
         if ( empty( $product_ids ) ) {
             return new WP_Error( 'invalid_args', __( 'Invalid product IDs.', 'glint-ai-wc' ), array( 'status' => 400 ) );
