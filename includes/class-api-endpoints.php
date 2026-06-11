@@ -101,9 +101,9 @@ class Glint_AI_WC_API_Endpoints {
 
                     if($product->is_on_sale()){
                         $sale_price =  round((($product->get_sale_price())/$step_value),2);
-                        $price_string = '<del aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $regluar_price . '</bdi></span></del> <span class="screen-reader-text">Original price was: $40.89.</span><ins aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $sale_price . ' ' . $product_suffix . '</bdi></span></ins><span class="screen-reader-text">Current price is: $35.25.</span>';
+                        $price_string = '<del aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $regluar_price . '</bdi></span></del> <span class="screen-reader-text">Original price was: $40.89.</span><ins aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $sale_price . '/' . $product_suffix . '</bdi></span></ins><span class="screen-reader-text">Current price is: $35.25.</span>';
                     }else{
-                        $price_string = '<ins aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $regluar_price . ' ' . $product_suffix . '</bdi></span></ins>';
+                        $price_string = '<ins aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $regluar_price . '/' . $product_suffix . '</bdi></span></ins>';
                     }
                 }
             }
