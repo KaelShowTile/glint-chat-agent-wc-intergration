@@ -87,6 +87,27 @@ class Glint_AI_WC_API_Endpoints {
             $add_to_cart_url = site_url() . "/?add-to-cart=" . $id;
             $add_to_cart_text = $product->add_to_cart_text();
 
+            // Get step and suffix
+            $step_value = 0;
+            $product_suffix = null;
+            $price_string;
+            
+            if(function_exists( 'get_product_qty_data' ) ){
+                $step_value = get_product_qty_data($id);
+                $product_suffix = get_product_qty_suffix($id);
+
+                if($product_suffix && $step_value > 0){
+                    $regluar_price = round((($product->get_regular_price())/$step_value),2);
+
+                    if($product->is_on_sale()){
+                        $sale_price =  round((($product->get_sale_price())/$step_value),2);
+                        $price_string = '<del aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $regluar_price . '</bdi></span></del> <span class="screen-reader-text">Original price was: $40.89.</span><ins aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $sale_price . ' ' . $product_suffix . '</bdi></span></ins><span class="screen-reader-text">Current price is: $35.25.</span>';
+                    }else{
+                        $price_string = '<ins aria-hidden="true"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>' . $regluar_price . ' ' . $product_suffix . '</bdi></span></ins>';
+                    }
+                }
+            }
+
             // Construct HTML Card
             $card_html = '<div class="glint-ai-product-card" style="background: #efefef; border: 1px solid #232f3d;">';
             $card_html .= '<a href="' . $product_url . '"><div class="product-image">' . $image_html . '</div></a>';
@@ -109,7 +130,11 @@ class Glint_AI_WC_API_Endpoints {
                 $card_html .= '</ul>';
             }
 
-            $card_html .= '<div class="product-price" style="margin: 0 15px; padding-bottom: 10px; font-size: 1.2rem; font-weight: 700;">' . $product->get_price_html() . '</div>';
+            if($product_suffix && $step_value > 0){
+                $card_html .= '<div class="product-price" style="margin: 0 15px; padding-bottom: 10px; font-size: 1.2rem; font-weight: 700;">' . $price_string . '</div>';
+            }else{
+                $card_html .= '<div class="product-price" style="margin: 0 15px; padding-bottom: 10px; font-size: 1.2rem; font-weight: 700;">' . $product->get_price_html() . '</div>';
+            } 
             $card_html .= '<a href="' . esc_url( $add_to_cart_url ) . '" class="button add_to_cart_button" style="display: inline-block; width: 100%; text-align: center; background: #232f3d; color: #fff; margin-top: 0; font-size: 0.8rem;">' . esc_html( $add_to_cart_text ) . '</a>';
             $card_html .= '</div>';
 
